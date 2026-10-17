@@ -8,6 +8,7 @@ build:
 
 clean:
     rm -r {{output}} || true
+    rm result || true
 
 seven: 
     #!/usr/bin/env nu

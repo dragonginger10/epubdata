@@ -32,6 +32,18 @@
         go = final."go_1_${toString goVersion}";
       };
 
+      packages = forEachSupportedSystem ({pkgs,...}: rec {
+        default = epubdata;
+        epubdata =  pkgs.buildGo127Module {
+          pname = "epubdata";
+          version = "0.0.1";
+          
+          src = ./.;
+          vendorHash = "sha256-EytkffcdJ5HiPiHmIYspkMF1DGfeVDlFAiiNaVhbGeQ=";
+
+        };
+      });
+
       devShells = forEachSupportedSystem (
         { pkgs, system }:
         {
