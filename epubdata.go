@@ -15,7 +15,7 @@ import (
 )
 
 type EpubData struct {
-	Tile string
+	Title string
 	Author string
 	Path string
 }
