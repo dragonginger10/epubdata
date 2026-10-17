@@ -32,17 +32,33 @@
         go = final."go_1_${toString goVersion}";
       };
 
-      packages = forEachSupportedSystem ({pkgs,...}: rec {
-        default = epubdata;
-        epubdata =  pkgs.buildGo127Module {
-          pname = "epubdata";
-          version = "0.0.1";
-          
-          src = ./.;
-          vendorHash = "sha256-EytkffcdJ5HiPiHmIYspkMF1DGfeVDlFAiiNaVhbGeQ=";
+      packages = forEachSupportedSystem (
+        { system, pkgs, ... }: rec {
+          default = epubdata;
+          epubdata = pkgs.buildGo127Module {
+            pname = "epubdata";
+            version = "0.0.1";
 
-        };
-      });
+            src = ./.;
+            vendorHash = "sha256-EytkffcdJ5HiPiHmIYspkMF1DGfeVDlFAiiNaVhbGeQ=";
+
+          };
+
+          library = pkgs.stdenvNoCC.mkDerivation {
+            pname = "library";
+            version = "alpha";
+
+            propagatedBuildInputs = with pkgs; [
+              fzf
+              nushell
+              self.packages.${system}.epubdata
+            ];
+
+            dontUnpack = ":";
+            installPhass = "install -Dm755 ./library.nu $out/bin/library";
+          };
+        }
+      );
 
       devShells = forEachSupportedSystem (
         { pkgs, system }:
